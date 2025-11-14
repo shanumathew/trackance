@@ -1,4 +1,4 @@
-name: Build & Deploy to Netlify
+name: Verify Build
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [master, main, develop]
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     
     steps:
@@ -20,11 +20,6 @@ jobs:
           flutter-version: '3.38.1'
           channel: 'stable'
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
       - name: Get Flutter dependencies
         run: flutter pub get
 
@@ -34,23 +29,5 @@ jobs:
       - name: Build Flutter Web
         run: flutter build web --release --no-tree-shake-icons
 
-      - name: Install Netlify CLI
-        run: npm install -g netlify-cli
-
-      - name: Deploy to Netlify
-        run: netlify deploy --prod --dir=build/web --message "Deploy from GitHub Actions"
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-
-      - name: Comment PR with Netlify URL
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '✅ Deployed to Netlify! Check the preview link in the deployment status.'
-            })
+      - name: Build successful ✅
+        run: echo "Flutter web build completed successfully!"
