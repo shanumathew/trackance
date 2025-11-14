@@ -1,0 +1,60 @@
+# Netlify Configuration Template
+# 
+# Place this file in your Flutter project root as: netlify.toml
+# 
+# Usage:
+# 1. Copy this file to your new Flutter project root
+# 2. Update publish directory if your build output is different
+# 3. Commit and push to GitHub
+# 4. Connect to Netlify and it will auto-use this config
+
+[build]
+  # Command to run during build (optional)
+  # If you're committing pre-built files, just use echo
+  # If you want Netlify to build, use: flutter pub get && dart run build_runner build && flutter build web --release
+  # Note: Netlify doesn't have Flutter installed by default, so we recommend Option 1
+  command = "echo 'Static files only - pre-built Flutter web app'"
+  
+  # Directory containing your built files
+  publish = "build/web"
+
+# Single Page App (SPA) Routing
+# This redirects all routes to index.html for client-side routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Security Headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
+# HTML Cache: Don't cache (always fresh)
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+# Assets Cache: Cache forever (fingerprinted)
+[[headers]]
+  for = "/assets/**"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# JS/CSS Cache: Cache forever (fingerprinted by Flutter build)
+[[headers]]
+  for = "/**/*.{js,css}"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Canvaskit files: Cache for 1 week
+[[headers]]
+  for = "/canvaskit/**"
+  [headers.values]
+    Cache-Control = "public, max-age=604800, immutable"
