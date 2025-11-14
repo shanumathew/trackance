@@ -20,6 +20,11 @@ jobs:
           flutter-version: '3.19.0'
           channel: 'stable'
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
       - name: Get Flutter dependencies
         run: flutter pub get
 
@@ -29,10 +34,11 @@ jobs:
       - name: Build Flutter Web
         run: flutter build web --release --no-tree-shake-icons
 
+      - name: Install Netlify CLI
+        run: npm install -g netlify-cli
+
       - name: Deploy to Netlify
-        uses: netlify/actions/cli@master
-        with:
-          args: deploy --prod --dir=build/web --message "Deploy from GitHub Actions"
+        run: netlify deploy --prod --dir=build/web --message "Deploy from GitHub Actions"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}

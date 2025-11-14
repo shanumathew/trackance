@@ -1,6 +1,7 @@
 [build]
-  command = "flutter pub get && dart run build_runner build && flutter build web --release"
+  command = "echo 'Build happens on GitHub Actions'"
   publish = "build/web"
+  ignore = "git diff --quiet $COMMIT_REF $CACHED_COMMIT_REF -- . ':!build'"
 
 [build.environment]
   FLUTTER_VERSION = "3.19.0"
