@@ -1,10 +1,6 @@
 [build]
-  command = "echo 'Build happens on GitHub Actions'"
+  command = "echo 'Static files only - no build needed'"
   publish = "build/web"
-  ignore = "git diff --quiet $COMMIT_REF $CACHED_COMMIT_REF -- . ':!build'"
-
-[build.environment]
-  FLUTTER_VERSION = "3.19.0"
 
 [[redirects]]
   from = "/*"
